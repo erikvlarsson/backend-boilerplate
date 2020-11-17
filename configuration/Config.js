@@ -22,11 +22,10 @@ const connectToMongoDB = async () => {
 };
 
 const startServer = (app) => {
-  // const port = process.env.PORT;
-  // app.listen(port, () => {
-  //   console.log(`Server is running on port ${port}`);
-  // });
-  app.listen(5000);
+  const port = process.env.PORT;
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
 };
 
 export default { connectToMongoDB, startServer };
