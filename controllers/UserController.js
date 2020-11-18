@@ -1,26 +1,42 @@
-import UserModel from "../models/User";
+import UserModel from "../models/UserCopy";
 import bcrypt from "bcrypt";
 
 const registerUser = async (req, res) => {
-  console.log("userController.registerUser");
-  console.log(JSON.stringify(req.body));
   const user = new UserModel({
     name: req.body.name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 7),
   });
-
-  try {
-    const response = await user.save();
-    res.status(201).send(response);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      message: "Error while trying to create new user.",
-      error: error.message,
+  await user
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.status(201).send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("ERROR.");
     });
-  }
 };
+
+// const registerUser = async (req, res) => {
+//   const user = new UserModel({
+//     name: req.body.name,
+//     email: req.body.email,
+//     password: bcrypt.hashSync(req.body.password, 7),
+//   });
+
+//   try {
+//     const response = await user.save();
+//     res.status(201).send(response);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       message: "Error while trying to create new user.",
+//       error: error.message,
+//     });
+//   }
+// };
 
 const authenticateUser = async (req, res) => {
   try {
@@ -48,7 +64,6 @@ const getAllUsers = async (req, res) => {
     console.log("fetching all users...");
     const response = await UserModel.find();
     console.log("found em!");
-
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send({
