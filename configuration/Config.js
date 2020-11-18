@@ -5,19 +5,6 @@ const MongoClient = require("mongodb").MongoClient;
 require("dotenv/config");
 
 //connect to db
-// const connectToMongoDB = async () => {
-//   const client = new MongoClient(process.env.DATABASE_URL, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   });
-//   client.connect((err) => {
-//     console.log("CONNECTED!");
-//     const collection = client.db("database0").collection("users");
-//     // perform actions on the collection object
-//     console.log(collection.find());
-//     client.close();
-//   });
-// };
 const connectToMongoDB = async () => {
   try {
     await mongoose.connect(process.env.DATABASE_URL, {
