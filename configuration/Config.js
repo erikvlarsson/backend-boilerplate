@@ -20,18 +20,15 @@ require("dotenv/config");
 // };
 const connectToMongoDB = async () => {
   try {
-    await mongoose.connect(
-      process.env.DATABASE_URL,
-      {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-      },
-      () => {
-        console.log("Connected to MongoDB Atlas!");
-      }
-    );
+    await mongoose.connect(process.env.DATABASE_URL, {
+      keepAlive: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    });
+    console.log("Connected to MongoDB atlas!");
   } catch (error) {
     console.log("Error while trying connect to MongoDB!");
+    console.log(error);
   }
 };
 

@@ -61,9 +61,7 @@ const authenticateUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    console.log("fetching all users...");
     const response = await UserModel.find();
-    console.log("found em!");
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send({
