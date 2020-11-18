@@ -2,8 +2,10 @@ import UserModel from "../models/User";
 import bcrypt from "bcrypt";
 
 const registerUser = async (req, res) => {
+  console.log("userController.registerUser");
+  console.log(JSON.stringify(req.body));
   const user = new UserModel({
-    username: req.body.username,
+    name: req.body.name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 7),
   });
@@ -12,6 +14,7 @@ const registerUser = async (req, res) => {
     const response = await user.save();
     res.status(201).send(response);
   } catch (error) {
+    console.log(error);
     res.status(500).send({
       message: "Error while trying to create new user.",
       error: error.message,
@@ -42,7 +45,10 @@ const authenticateUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
+    console.log("fetching all users...");
     const response = await UserModel.find();
+    console.log("found em!");
+
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send({

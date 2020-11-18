@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 
-// @ts-ignore
-const UserSchema = mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
-    username: String,
+    name: String,
     password: String,
     email: String,
   },
