@@ -2,7 +2,7 @@ import userController from "../controllers/UserController.js";
 
 const setRoutes = (app) => {
   app.post("/register", userController.registerUser);
-  app.get("/authenticate", userController.authenticateUser);
+  app.post("/authenticate", userController.authenticateUser);
   app.get("/users", userController.getAllUsers);
   app.get("/user/:userId", userController.getUserWithId);
   app.get("/clear-all-users", userController.clearUsers);
