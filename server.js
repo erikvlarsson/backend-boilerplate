@@ -16,7 +16,6 @@ app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
   next();
-  console.log(res.statusCode);
   if (res.statusCode >= 400) throw new Error(`at ${req.method} ${req.path}`);
 });
 
