@@ -9,10 +9,10 @@ const getRefreshToken = async (req, res) => {
       originalRefreshToken,
       process.env.REFRESH_TOKEN_KEY
     );
-    const user = await UserModel.findOne({ id: decoded.user.id });
+    const user = await UserModel.findOne({ _id: decoded.user._id });
     if (decoded && user) {
-      const refreshToken = createRefreshToken(decoded.user.id);
-      const accessToken = createRefreshToken(decoded.user);
+      const refreshToken = createRefreshToken(user._id);
+      const accessToken = createRefreshToken(user);
       res
         .status(201)
         .json({ refreshToken: refreshToken, accessToken: accessToken });
@@ -29,14 +29,10 @@ const getAccessToken = async (req, res) => {
   const refreshToken = req.token;
   const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY);
   if (decoded) {
-    await UserModel.findOne({ id: decoded.user.id })
+    await UserModel.findOne({ _id: decoded.user._id })
       .then((user) => {
         if (user) {
-          const accessToken = jwt.sign(
-            decoded.user,
-            process.env.ACCESS_TOKEN_KEY,
-            { expiresIn: process.env.ACCESS_TOKEN_LIFESPAN }
-          );
+          const accessToken = createAccessToken(user);
           res.status(201).json({ accessToken: accessToken });
         } else {
           res.status(403).send();
@@ -88,34 +84,15 @@ const signup = async (req, res) => {
   if (user) {
     res.status(302).send();
   } else {
-    user = new UserModel({
+    const newUser = new UserModel({
       name: req.body.name,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 7),
     });
     try {
-      const userData = await user.save();
-      const accessToken = jwt.sign(
-        {
-          user: {
-            id: userData._id,
-            name: userData.name,
-            email: userData.email,
-          },
-        },
-        process.env.ACCESS_TOKEN_KEY,
-        { expiresIn: process.env.ACCESS_TOKEN_LIFESPAN }
-      );
-      const refreshToken = jwt.sign(
-        {
-          user: {
-            id: userData._id,
-            email: userData.email,
-          },
-        },
-        process.env.REFRESH_TOKEN_KEY,
-        { expiresIn: process.env.REFRESH_TOKEN_LIFESPAN }
-      );
+      const user = await newUser.save();
+      const accessToken = createAccessToken(user);
+      const refreshToken = createRefreshToken(user._id);
       if (accessToken && refreshToken) {
         res.status(201).json({
           accessToken: accessToken,
@@ -133,7 +110,7 @@ const createRefreshToken = (userId) => {
   const refreshToken = jwt.sign(
     {
       user: {
-        id: userId,
+        _id: userId,
       },
     },
     process.env.REFRESH_TOKEN_KEY,
@@ -146,7 +123,7 @@ const createAccessToken = (userData) => {
   const accessToken = jwt.sign(
     {
       user: {
-        id: userData.id,
+        _id: userData._id,
         name: userData.name,
         email: userData.email,
       },
