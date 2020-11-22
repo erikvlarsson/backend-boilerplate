@@ -19,7 +19,6 @@ app.use(function (req, res, next) {
   if (res.statusCode >= 400) throw new Error(`at ${req.method} ${req.path}`);
 });
 
-// Routes
 Routing.setRoutes(app);
 
 // Apply Middleware
