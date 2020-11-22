@@ -12,7 +12,6 @@ export default { setRoutes };
 
 const withToken = (req, res, next) => {
   const bearerHeader = req.headers["authorization"];
-  console.log(typeof bearerHeader);
   if (typeof bearerHeader !== "undefined") {
     const token = bearerHeader.split(" ")[1];
     req.token = token;

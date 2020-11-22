@@ -23,8 +23,8 @@ app.use(function (req, res, next) {
 Routing.setRoutes(app);
 
 // Apply Middleware
-app.use(Middleware.notFound);
-app.use(Middleware.errorHandler);
+// app.use(Middleware.notFound);
+// app.use(Middleware.errorHandler);
 
 Config.startServer(app);
 Config.connectToMongoDB();
