@@ -1,4 +1,5 @@
 import authController from "../controllers/AuthController.js";
+import blogController from "../controllers/BlogController.js";
 import jwt from "jsonwebtoken";
 
 const setRoutes = (app) => {
@@ -18,6 +19,16 @@ const setRoutes = (app) => {
   app.post("/signup", authController.signup);
   app.get("/clear-all-users", authController.clearUsers);
   app.get("/secret", withToken, authAccess, authController.secret);
+  // BLOGPOSTS
+  app.post("/posts", withToken, authAccess, blogController.createPost);
+  app.get("/posts", withToken, authAccess, blogController.getPosts);
+  app.delete(
+    "/posts/:postId",
+    withToken,
+    authAccess,
+    blogController.deletePost
+  );
+  app.put("/posts/:postId", withToken, authAccess, blogController.updatePost);
 };
 
 export default { setRoutes };
